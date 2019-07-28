@@ -1,4 +1,5 @@
 import tensorflow as tf
+import tensorflow.keras as tfk
 
 class BiRNN(tf.keras.Model):
     def __init__(self, hparams):
@@ -28,16 +29,16 @@ class BiRNN(tf.keras.Model):
 
         # Create GRU Cell
         if tf.test.is_gpu_available():
-            self.gru = tf.keras.layers.Bidirectional(\
-                            tf.keras.layers.CuDNNGRU(self.units, return_sequences=True, return_state=True, name='gru'))
+            self.gru = tfk.layers.Bidirectional(\
+                            tfk.layers.CuDNNGRU(self.units, return_sequences=True, return_state=True, name='gru'))
         else:
-            self.gru = tf.keras.layers.Bidirectional(\
-                            tf.keras.layers.GRU(self.units, return_sequences=True, return_state=True, 
+            self.gru = tfk.layers.Bidirectional(\
+                            tfk.layers.GRU(self.units, return_sequences=True, return_state=True, 
                                                    recurrent_activation='relu', name='gru'))
 
-        self.dropout = tf.keras.layers.Dropout(self.dropout_rate)
-        self.fc_out  = tf.keras.layers.Dense(self.units, activation='linear', name='affine_out')
-        self.mmult   = tf.keras.backend.dot
+        self.dropout = tfk.layers.Dropout(self.dropout_rate)
+        self.fc_out  = tfk.layers.Dense(self.units, activation='linear', name='affine_out')
+        self.mmult   = tfk.backend.dot
 
     def embed(self, x, methods):
         e = []
